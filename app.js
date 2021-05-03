@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const profileSettingsRouter = require("./routes/profileSettings");
 const profilePageRouter = require("./routes/profile");
+const groupRouter = require("./routes/group");
 const port = 5000;
 
 mongoose
@@ -15,11 +16,8 @@ mongoose
 app.use(express.json());
 app.use("/profileSettings", profileSettingsRouter);
 app.use("/profile", profilePageRouter);
-
-// app.get("/", (request, response) => {
-//     response.send("Hello World!");
-// });
+app.use("/group", groupRouter);
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`Study With Me server listening at http://localhost:${port}`);
 });
