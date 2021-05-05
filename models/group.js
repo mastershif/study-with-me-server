@@ -1,22 +1,37 @@
-let mongoose = require("mongoose");
-let Schema = mongoose.Schema;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-let groupSchema = new Schema({
+const GroupPurpose = {
+    EXAM: 1,
+    REVISION: 2,
+    FOCUS: 3,
+    OTHER: 4,
+};
+Object.freeze(GroupPurpose);
+
+const GroupType = {
+    FRONTAL: 1,
+    VIRTUAL: 2,
+};
+Object.freeze(GroupType);
+
+const groupSchema = new Schema({
     id: Number,
     topic: String,
-    purpose: String,
+    purpose: GroupPurpose,
     description: String,
     sameInstituteOnly: Boolean,
-    date: String,
-    startHour: String,
-    endHour: String,
+    date: Date,
+    startHour: Date,
+    endHour: Date,
     maxSize: Number,
-    frontalOrVirtual: String,
+    frontalOrVirtual: GroupType,
     city: String,
     location: String,
     videoLink: String,
+    calendar: Boolean,
 });
 
-let Group = mongoose.model("Group", groupSchema);
+const Group = mongoose.model("Group", groupSchema);
 
 module.exports = { Group };
