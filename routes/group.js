@@ -3,13 +3,16 @@ const router = express.Router();
 let Group = require("../models/group").Group;
 
 router.get("/:groupId", async(request, response) => {
-    let groupId = request.params.groupId;
-    let group = await Group.findOne({ groupId: groupId });
-    response.send(group);
+    try {
+        const group = await Group.findById(request.params.groupId);
+        response.json(group);
+    } catch (error) {
+        response.json({ message: error });
+    }
 });
 
 router.put("/", async(request, response) => {
-    const groupDetails = {
+    const group = new Group({
         topic: request.body.topic,
         purpose: request.body.purpose,
         description: request.body.description,
@@ -22,9 +25,13 @@ router.put("/", async(request, response) => {
         city: request.body.city,
         location: request.body.location,
         videoLink: request.body.videoLink,
-    };
-    await Group.create(groupDetails);
-    response.send("Created a group!");
+    });
+    try {
+        const savedGroup = await group.save();
+        response.json(savedGroup);
+    } catch (error) {
+        response.json({ message: error });
+    }
 });
 
 module.exports = router;
