@@ -4,8 +4,8 @@ let Group = require("../models/group").Group;
 
 router.get("/:groupId", async(request, response) => {
     try {
-        const group = await Group.findById(request.params.groupId);
-        response.json(group);
+        const groupId = await Group.findById(request.params.groupId);
+        response.json(groupId);
     } catch (error) {
         response.json({ message: error });
     }
