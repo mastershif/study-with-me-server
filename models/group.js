@@ -2,19 +2,19 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const groupSchema = new Schema({
-    id: Number,
-    topic: String,
-    purpose: String,
-    description: String,
-    sameInstituteOnly: Boolean,
+    _id: Schema.Types.ObjectId,
+    groupTitle: String,
+    groupPurpose: String,
+    groupDescription: String,
+    institution: Boolean,
     date: Date,
     startHour: Date,
     endHour: Date,
-    maxSize: Number,
-    frontalOrVirtual: String,
+    groupSize: Number,
+    meetingType: String,
     city: String,
-    location: String,
-    videoLink: String,
+    place: String,
+    link: String,
     calendar: Boolean,
 });
 
