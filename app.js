@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require("cors");
 const profileSettingsRouter = require("./routes/profileSettings");
 const profilePageRouter = require("./routes/profile");
 const groupRouter = require("./routes/group");
@@ -14,6 +15,7 @@ mongoose
     .catch((err) => console.log("Failed to connect to DB"));
 
 app.use(express.json());
+app.use(cors());
 app.use("/profileSettings", profileSettingsRouter);
 app.use("/profile", profilePageRouter);
 app.use("/group", groupRouter);
