@@ -14,6 +14,7 @@ let userSchema = new Schema({
     degree: String,
     major: String,
     minor: String,
+    groups: [String],
 });
 
 let User = mongoose.model("User", userSchema);
