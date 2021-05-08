@@ -8,6 +8,17 @@ router.get("/:email", async(request, response) => {
     response.send(user);
 });
 
+router.put("/:email", async(request, response) => {
+    let email = request.params.email;
+    ///////////////////////////////////////////////////////////////////////////// ====> need to change after uniting the repositories
+    let newUserImg = request.file.path
+        .substring(request.file.path.indexOf("assets"), request.file.path.length)
+        .replace(/\\/g, "/");
+    /////////////////////////////////////////////////////////////////////////////
+    await User.updateOne({ email: email }, { userImg: newUserImg });
+    response.send("User Profile Picture Updated!");
+});
+
 router.put("/", async(request, response) => {
     let email = request.body.email;
     await User.updateOne({ email: email }, request.body);
