@@ -5,6 +5,7 @@ let userSchema = new Schema({
     username: {
         type: String,
         min: 2,
+        max: 20,
     },
     email: {
         type: String,
@@ -15,6 +16,7 @@ let userSchema = new Schema({
     major: String,
     minor: String,
     groups: [String],
+    userImg: String,
 });
 
 let User = mongoose.model("User", userSchema);
