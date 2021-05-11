@@ -4,18 +4,27 @@ const router = express.Router();
 const groupValidation = require("../validation/groupValidation").groupValidation;
 let Group = require("../models/group").Group;
 
-router.get("/:groupId", async(request, response) => {
+router.get("/:_id", async(request, response) => {
     try {
-        const groupId = await Group.findById(request.params.groupId);
-        response.json(groupId);
+        const group = await Group.findById(request.params._id);
+        response.json(group);
     } catch (error) {
         response.json({ message: error });
     }
 });
 
 router.post("/", async(request, response) => {
+    let isExists = false;
+    const _id = request.body._id;
+    try {
+        if (_id !== '') {
+            isExists = await Group.exists({_id: mongoose.Types.ObjectId(_id)})
+        }
+    } catch (error) {
+        return response.status(400).json({ message: "An error occurred because of the ObjectId." });
+    }
     const group = new Group({
-        _id: new mongoose.Types.ObjectId,
+        _id: isExists ? mongoose.Types.ObjectId(_id) : new mongoose.Types.ObjectId,
         groupTitle: request.body.groupTitle,
         groupPurpose: request.body.groupPurpose,
         groupDescription: request.body.groupDescription,
@@ -33,7 +42,9 @@ router.post("/", async(request, response) => {
     try {
         await groupValidation.validate(group, { abortEarly: false })
         try {
-            const savedGroup = await group.save();
+            const filter = {_id: group._id};
+            const flags = {new: true, upsert: true};
+            const savedGroup = await Group.findOneAndUpdate(filter, group, flags);
             response.status(201).json(savedGroup);
         } catch (error) {
             return response.status(500).json({ message: "An error occurred while saving the group." });
