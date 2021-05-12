@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 let Group = require("../models/group").Group;
 const { User } = require("../models/user");
@@ -13,10 +14,11 @@ router.post("/", async(request, response) => {
         if (userGroups === null) {
             return response.status(500).json({ message: `User with email ${request.body.email} doesn't have field 'groups'` });
         }
-        const groupId = await Group.findById(request.body.groupId);
+        const group = await Group.findById(mongoose.Types.ObjectId(request.body.groupId));
         // add the new group to the user's groups
-        User.findByIdAndUpdate(user, { groups: [...userGroups, groupId] });
-        response.status(200).json({ message: `User ${user} asked to join group ${groupId}`});
+        User.findByIdAndUpdate(user._id, { groups: [...userGroups.groups, group._id] }, { strict: false });
+        Group.findByIdAndUpdate(group._id, { users: [...group.users, user._id] }, { strict: false });
+        response.status(200).json({ message: `User ${request.body.email} has joined the group ${group.groupTitle}`});
     } catch (error) {
         console.log(error);
         response.status(500).json({ message: error });
