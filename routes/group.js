@@ -16,12 +16,23 @@ router.get("/:_id", async(request, response) => {
 router.post("/", async(request, response) => {
     let isExists = false;
     const _id = request.body._id;
+    // check if the group already exists
     try {
         if (_id !== '') {
             isExists = await Group.exists({_id: mongoose.Types.ObjectId(_id)})
         }
     } catch (error) {
         return response.status(400).json({ message: "An error occurred because of the ObjectId." });
+    }
+    // check if the group exists, if the user that is editing the group is the admin
+    let isAdmin = true;
+    if (isExists) {
+        const groupAdmin = await Group.findById(request.params._id).select('admin');
+        console.log('the group admin is: ', groupAdmin);
+        isAdmin = groupAdmin === request.body.user;
+    }
+    if (!isAdmin) {
+        return response.status(401).json({ message: "The user is not authorized to edit the group" });
     }
     const group = new Group({
         _id: isExists ? mongoose.Types.ObjectId(_id) : new mongoose.Types.ObjectId,
