@@ -16,6 +16,8 @@ const groupSchema = new Schema({
     place: String,
     link: String,
     calendar: Boolean,
+    users: [Schema.Types.ObjectId],
+    admin: Schema.Types.ObjectId
 });
 
 const Group = mongoose.model("Group", groupSchema);
