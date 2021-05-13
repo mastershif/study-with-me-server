@@ -15,7 +15,7 @@ let userSchema = new Schema({
     degree: String,
     major: String,
     minor: String,
-    groups: [String],
+    groups: [Schema.Types.ObjectId],
     userImg: String,
 });
 
