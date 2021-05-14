@@ -7,6 +7,7 @@ const profileSettingsRouter = require("./routes/profileSettings");
 const profilePageRouter = require("./routes/profile");
 const groupRouter = require("./routes/group");
 const joinGroupRouter = require("./routes/joinGroup");
+const signInRouter = require("./routes/signIn");
 const port = 5000;
 
 mongoose
@@ -29,6 +30,7 @@ app.use("/profileSettings", profileSettingsRouter);
 app.use("/profile", profilePageRouter);
 app.use("/group", groupRouter);
 app.use("/joinGroup", joinGroupRouter);
+app.use("/signIn", signInRouter);
 
 app.listen(port, () => {
     console.log(`Study With Me server listening at http://localhost:${port}`);
