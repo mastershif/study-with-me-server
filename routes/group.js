@@ -38,6 +38,8 @@ router.post("/", async(request, response) => {
         place: request.body.place,
         link: request.body.link,
         calendar: request.body.calendar || false,
+        users: isExists ? request.body.users : [request.body.admin],
+        admin: request.body.admin
     });
     try {
         await groupValidation.validate(group, { abortEarly: false })
