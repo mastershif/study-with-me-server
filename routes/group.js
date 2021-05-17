@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const groupValidation = require("../validation/groupValidation").groupValidation;
 let Group = require("../models/group").Group;
+const { User } = require("../models/user");
 
 router.get("/:_id", async(request, response) => {
     try {
@@ -47,6 +48,10 @@ router.post("/", async(request, response) => {
             const filter = {_id: group._id};
             const flags = {new: true, upsert: true};
             const savedGroup = await Group.findOneAndUpdate(filter, group, flags);
+            if (!isExists) {
+                const userGroups = await User.findById(request.body.admin).select('groups');
+                await User.findByIdAndUpdate(request.body.admin, { groups: [...userGroups.groups, group._id] }, { strict: false }).exec();
+            }
             response.status(201).json(savedGroup);
         } catch (error) {
             return response.status(500).json({ message: "An error occurred while saving the group." });
