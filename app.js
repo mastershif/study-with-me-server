@@ -7,6 +7,7 @@ const profileSettingsRouter = require("./routes/profileSettings");
 const profilePageRouter = require("./routes/profile");
 const groupRouter = require("./routes/group");
 const joinGroupRouter = require("./routes/joinGroup");
+const leaveGroupRouter = require("./routes/leaveGroup");
 const signInRouter = require("./routes/signIn");
 const allGroupsRouter = require("./routes/allGroups")
 const port = 5000;
@@ -31,6 +32,7 @@ app.use("/profileSettings", profileSettingsRouter);
 app.use("/profile", profilePageRouter);
 app.use("/group", groupRouter);
 app.use("/joinGroup", joinGroupRouter);
+app.use("/leaveGroup", leaveGroupRouter);
 app.use("/signIn", signInRouter);
 app.use("/allGroups", allGroupsRouter);
 
