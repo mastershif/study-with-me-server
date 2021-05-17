@@ -38,7 +38,6 @@ router.post("/", async(request, response) => {
         city: request.body.city,
         place: request.body.place,
         link: request.body.link,
-        calendar: request.body.calendar || false,
         users: isExists ? request.body.users : [request.body.admin],
         admin: request.body.admin
     });
