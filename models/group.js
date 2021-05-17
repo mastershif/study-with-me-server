@@ -15,7 +15,6 @@ const groupSchema = new Schema({
     city: String,
     place: String,
     link: String,
-    calendar: Boolean,
     users: [Schema.Types.ObjectId],
     admin: Schema.Types.ObjectId
 });

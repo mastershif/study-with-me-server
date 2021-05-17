@@ -12,7 +12,6 @@ const groupValidation = yup.object().shape({
     date: yup.date().min(todayDate).required(),
     startHour: yup.date().required(),
     endHour: yup.date().min(yup.ref('startHour')).required(),
-    calendar: yup.boolean(),
     meetingType: yup.string().oneOf(['וירטואלית', 'פרונטלית']),
     city: yup.string().when('meetingType', {is: 'פרונטלית', then: yup.string().required()}),
     place: yup.string().when('meetingType', {is: 'פרונטלית', then: yup.string().required()}),
