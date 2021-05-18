@@ -15,7 +15,11 @@ const groupSchema = new Schema({
     city: String,
     place: String,
     link: String,
-    users: [Schema.Types.ObjectId],
+    users: [{
+        id : Schema.Types.ObjectId,
+        name : String,
+        imageUrl: String,
+    }],
     admin: Schema.Types.ObjectId
 });
 

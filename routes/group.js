@@ -24,6 +24,7 @@ router.post("/", async(request, response) => {
     } catch (error) {
         return response.status(400).json({ message: "An error occurred because of the ObjectId." });
     }
+    const adminUser = await User.findById(request.body.admin);
     const group = new Group({
         _id: isExists ? mongoose.Types.ObjectId(_id) : new mongoose.Types.ObjectId,
         groupTitle: request.body.groupTitle,
@@ -38,7 +39,11 @@ router.post("/", async(request, response) => {
         city: request.body.city,
         place: request.body.place,
         link: request.body.link,
-        users: isExists ? request.body.users : [request.body.admin],
+        users: isExists ? request.body.users : [{
+            id: request.body.admin,
+            name: adminUser.username,
+            imageUrl: adminUser.userImg
+        }],
         admin: request.body.admin
     });
     try {
