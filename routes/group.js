@@ -40,7 +40,7 @@ router.post("/", async(request, response) => {
         place: request.body.place,
         link: request.body.link,
         users: isExists ? request.body.users : [{
-            id: request.body.admin,
+            _id: request.body.admin,
             name: adminUser.username,
             imageUrl: adminUser.userImg
         }],
