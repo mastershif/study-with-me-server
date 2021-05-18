@@ -18,7 +18,7 @@ router.put("/", async(request, response) => {
         // add the new group to the user's groups
         await User.findByIdAndUpdate(user._id, { groups: [...userGroups.groups, group._id] }, { strict: false }).exec();
         await Group.findByIdAndUpdate(group._id, { users: [...group.users, {
-                id: user._id,
+                _id: user._id,
                 name: user.username,
                 imageUrl: user.userImg
             }] }, { strict: false }).exec();
