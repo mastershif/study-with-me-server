@@ -20,7 +20,7 @@ router.put("/", async(request, response) => {
 
         await Group.findByIdAndUpdate(group._id, { $pull: { users: { _id: user._id } } }, { new: true }); // filter & delete
 
-        response.status(200).json("success!");
+        response.status(200).json("User Left Group!");
 
     } catch (error) {
         response.status(500).json({ message: error });
