@@ -17,6 +17,7 @@ let userSchema = new Schema({
     minor: String,
     groups: [Schema.Types.ObjectId],
     userImg: String,
+    calendarIntegration: Boolean
 });
 
 let User = mongoose.model("User", userSchema);

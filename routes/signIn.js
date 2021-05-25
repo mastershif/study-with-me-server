@@ -16,6 +16,7 @@ router.post("/", async(request, response) => {
         userImg: reqBody.userImg,
         institute: reqBody.institute,
         degree: reqBody.degree,
+        calendarIntegration: reqBody.calendarIntegration,
         major: "",
         minor: "",
         groups: [],
