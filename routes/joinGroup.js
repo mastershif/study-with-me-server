@@ -17,12 +17,14 @@ router.put("/", async(request, response) => {
         const group = await Group.findById(mongoose.Types.ObjectId(request.body.groupId));
         // add the new group to the user's groups
         await User.findByIdAndUpdate(user._id, { groups: [...userGroups.groups, group._id] }, { strict: false }).exec();
-        await Group.findByIdAndUpdate(group._id, { users: [...group.users, {
+        await Group.findByIdAndUpdate(group._id, {
+            users: [...group.users, {
                 _id: user._id,
                 name: user.username,
                 imageUrl: user.userImg
-            }] }, { strict: false }).exec();
-        response.status(200).json({ message: `User ${request.body.email} has joined the group ${group.groupTitle}`});
+            }]
+        }, { strict: false }).exec();
+        response.status(200).json({ message: `User ${request.body.email} has joined the group ${group.groupTitle}` });
     } catch (error) {
         console.log(error);
         response.status(500).json({ message: error });
