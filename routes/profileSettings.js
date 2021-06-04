@@ -9,7 +9,7 @@ const OAuth2 = google.auth.OAuth2;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REDIRECT_URL = 'http://localhost:5000/profileSettings/oauthCallback';
-const TIMEZONE = 'Asia/Jerusalem';
+const ISRAEL_TIMEZONE = 'Asia/Jerusalem';
 
 // Configure OAuth2 Client
 function getOAuthClient() {
@@ -84,11 +84,11 @@ router.use("/oauthCallback", function(req, res) {
                     description: userGroups[i].groupDescription,
                     start: {
                         dateTime: ISODateString(userGroups[i].date, userGroups[i].startHour),
-                        timeZone: 'Asia/Jerusalem'
+                        timeZone: ISRAEL_TIMEZONE
                     },
                     end: {
                         dateTime: ISODateString(userGroups[i].date, userGroups[i].endHour),
-                        timeZone: 'Asia/Jerusalem'
+                        timeZone: ISRAEL_TIMEZONE
                     },
                     colorId: 1,
                 }
@@ -104,11 +104,8 @@ router.use("/oauthCallback", function(req, res) {
 
 router.get("/:email", async(request, response) => {
     let email = request.params.email;
-    let oAuthConsentUrl = '';
+    let oAuthConsentUrl = getAuthUrl();
     let user = await User.findOne({ email: email });
-    if (!user.calendarIntegration) {
-        oAuthConsentUrl = getAuthUrl();
-    }
     response.send([user, oAuthConsentUrl]);
 });
 
