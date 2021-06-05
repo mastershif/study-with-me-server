@@ -11,6 +11,7 @@ const groupRouter = require("./routes/group");
 const joinGroupRouter = require("./routes/joinGroup");
 const deleteGroupRouter = require("./routes/deleteGroup");
 const leaveGroupRouter = require("./routes/leaveGroup");
+const calendarSyncRouter = require("./routes/calendarSync");
 const signInRouter = require("./routes/signIn");
 const allGroupsRouter = require("./routes/allGroups")
 const port = 5000;
@@ -40,6 +41,7 @@ app.use("/deleteGroup", deleteGroupRouter);
 app.use("/leaveGroup", leaveGroupRouter);
 app.use("/signIn", signInRouter);
 app.use("/allGroups", allGroupsRouter);
+app.use("/calendarSync", calendarSyncRouter);
 app.use(Session({
     secret: 'raysources-secret-19890913007',
     resave: true,
