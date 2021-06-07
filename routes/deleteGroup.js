@@ -1,16 +1,20 @@
 const notifyByEmail = require('../email_notifications/notifier');
 const express = require("express");
-// const nodemailer = require("nodemailer");
 const router = express.Router();
 let User = require("../models/user").User;
 const Group = require("../models/group").Group;
 
+
 router.delete("/:groupID", async(request, response) => {
     try {
+        const verifiedAdmin = await User.findOne({email: request.session.verifiedEmail});
         const groupID = request.params.groupID;
         const group = await Group.findOne({ _id: groupID })
+        if (!group.admin.equals(verifiedAdmin._id)) {
+            return response.status(401).json({ message: `The user is not authorized to delete the group!` });
+        }
         const groupUsers = await User.find({ _id: { $in: group.users } });
-        for (i = 0; i < groupUsers.length; i++) {
+        for (let i = 0; i < groupUsers.length; i++) {
             await User.updateOne({ _id: groupUsers[i]._id }, { $pull: { 'groups': groupID } });
         }
         await Group.deleteOne({ _id: groupID })
@@ -30,7 +34,6 @@ router.delete("/:groupID", async(request, response) => {
             text: '', // plain text body
             html: message // html body
         };
-
         notifyByEmail(mailOptions);
 
     } catch (error) {

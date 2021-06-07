@@ -18,16 +18,23 @@ router.get("/:_id", async(request, response) => {
 router.post("/", async(request, response) => {
     let isExists = false;
     const _id = request.body._id;
+    const verifiedAdmin = await User.findOne({email: request.session.verifiedEmail});
+    if (verifiedAdmin == null) {
+        return response.status(401).json({ message: `The user is not authorized to create and edit a group!` });
+    }
     try {
         if (_id !== '') {
-            isExists = await Group.exists({ _id: mongoose.Types.ObjectId(_id) })
+            isExists = await Group.exists({_id: mongoose.Types.ObjectId(_id)})
         }
     } catch (error) {
         return response.status(400).json({ message: "An error occurred because of the ObjectId." });
     }
-    const adminUser = await User.findById(request.body.admin);
+    let existedGroup = {};
+    if (isExists) {
+        existedGroup = await Group.findById(mongoose.Types.ObjectId(_id));
+    }
     const group = new Group({
-        _id: isExists ? mongoose.Types.ObjectId(_id) : new mongoose.Types.ObjectId,
+        _id: isExists ? existedGroup._id : new mongoose.Types.ObjectId,
         groupTitle: request.body.groupTitle,
         groupPurpose: request.body.groupPurpose,
         groupDescription: request.body.groupDescription,
@@ -40,22 +47,25 @@ router.post("/", async(request, response) => {
         city: request.body.city,
         place: request.body.place,
         link: request.body.link,
-        users: isExists ? request.body.users : [{
-            _id: request.body.admin,
-            name: adminUser.username,
-            imageUrl: adminUser.userImg
+        users: isExists ? existedGroup.users : [{
+            _id: verifiedAdmin._id,
+            name: verifiedAdmin.username,
+            imageUrl: verifiedAdmin.userImg
         }],
-        admin: request.body.admin
+        admin: isExists ? existedGroup.admin : verifiedAdmin._id
     });
+    if (isExists && (verifiedAdmin == null || !existedGroup.admin.equals(verifiedAdmin._id))) {
+        return response.status(401).json({ message: `The user is not authorized to edit the group!` });
+    }
     try {
         await groupValidation.validate(group, { abortEarly: false })
         try {
-            const filter = { _id: group._id };
-            const flags = { new: true, upsert: true };
+            const filter = {_id: group._id};
+            const flags = {new: true, upsert: true};
             const savedGroup = await Group.findOneAndUpdate(filter, group, flags);
             if (!isExists) {
-                const userGroups = await User.findById(request.body.admin).select('groups');
-                await User.findByIdAndUpdate(request.body.admin, { groups: [...userGroups.groups, group._id] }, { strict: false }).exec();
+                const userGroups = await User.findById(verifiedAdmin._id).select('groups');
+                await User.findByIdAndUpdate(verifiedAdmin._id, { groups: [...userGroups.groups, group._id] }, { strict: false }).exec();
             } else {
                 /// Send Email to all group members informing them about the update in the group details
                 const message = `
@@ -71,7 +81,6 @@ router.post("/", async(request, response) => {
                     text: '', // plain text body
                     html: message // html body
                 };
-
                 notifyByEmail(mailOptions);
             }
             response.status(201).json(savedGroup);

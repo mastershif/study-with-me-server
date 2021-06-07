@@ -2,26 +2,23 @@ const express = require("express");
 const router = express.Router();
 let User = require("../models/user").User;
 
-router.get("/:email", async(request, response) => {
-    let email = request.params.email;
-    let user = await User.findOne({ email: email });
+router.get("/", async(request, response) => {
+    let user = await User.findOne({ email: request.session.verifiedEmail });
     response.send(user);
 });
 
-router.put("/:email", async(request, response) => {
-    let email = request.params.email;
+router.put("/userImage", async(request, response) => {
     ///////////////////////////////////////////////////////////////////////////// ====> need to change after uniting the repositories
     let newUserImg = request.file.path
         .substring(request.file.path.indexOf("assets"), request.file.path.length)
         .replace(/\\/g, "/");
     /////////////////////////////////////////////////////////////////////////////
-    await User.updateOne({ email: email }, { userImg: newUserImg });
+    await User.updateOne({ email: request.session.verifiedEmail }, { userImg: newUserImg });
     response.send("User Profile Picture Updated!");
 });
 
 router.put("/", async(request, response) => {
-    let email = request.body.email;
-    await User.updateOne({ email: email }, request.body);
+    await User.updateOne({ email: request.session.verifiedEmail }, request.body);
     response.send("User Updated!");
 });
 
