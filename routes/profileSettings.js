@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-let User = require("../models/user").User;
+const User = require("../models/user").User;
 
 router.get("/", async(request, response) => {
     let user = await User.findOne({ email: request.session.verifiedEmail });

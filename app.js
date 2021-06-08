@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require("express");
+const Session = require("express-session");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -13,6 +14,7 @@ const groupRouter = require("./routes/group");
 const joinGroupRouter = require("./routes/joinGroup");
 const deleteGroupRouter = require("./routes/deleteGroup");
 const leaveGroupRouter = require("./routes/leaveGroup");
+const calendarSyncRouter = require("./routes/calendarSync");
 const signInRouter = require("./routes/signIn");
 const signOutRouter = require("./routes/signOut");
 const allGroupsRouter = require("./routes/allGroups")
@@ -31,18 +33,18 @@ const imageStorage = multer.diskStorage({
 app.use(multer({ storage: imageStorage }).single("userImage"));
 app.use(express.json());
 app.use(cors({
-    origin : 'http://localhost:3000', //TODO: changing after production.
+    origin: 'http://localhost:3000', //TODO: changing after production.
     credentials: true,
 }));
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
-    rolling: true,       // TODO: need to think if we want to renew the session after each request.
+    rolling: true, // TODO: need to think if we want to renew the session after each request.
     store: MongoStore.create({ mongoUrl: process.env.DB_CONNECTION }),
     cookie: {
-        secure: false,      // TODO: need to change to false when moving to HTTPS.
-        maxAge: 2592000000,     // TODO: right now it's one month need to think about it.
+        secure: false, // TODO: need to change to false when moving to HTTPS.
+        maxAge: 2592000000, // TODO: right now it's one month need to think about it.
     },
 }))
 app.use("/isAuth", isAuthRouter);
@@ -55,6 +57,12 @@ app.use("/signIn", signInRouter);
 app.use("/signOut", signOutRouter);
 app.use("/group", groupRouter);
 app.use("/allGroups", allGroupsRouter);
+app.use("/calendarSync", calendarSyncRouter);
+app.use(Session({
+    secret: 'raysources-secret-19890913007',
+    resave: true,
+    saveUninitialized: true
+}));
 
 app.listen(port, () => {
     console.log(`Study With Me server listening at http://localhost:${port}`);
