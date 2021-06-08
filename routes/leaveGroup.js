@@ -7,7 +7,7 @@ const notifyByEmail = require('../email_notifications/notifier');
 
 router.put("/", async(request, response) => {
     try {
-        const user = await User.findOne({ email: request.body.email });
+        const user = await User.findOne({ email: request.session.verifiedEmail });
         if (user === null) {
             return response.status(500).json({ message: 'user not found' })
         }
@@ -39,9 +39,9 @@ router.put("/", async(request, response) => {
         response.status(200).json("User Left Group!");
 
     } catch (error) {
+        console.log(error);
         response.status(500).json({ message: error });
     }
-
 });
 
 module.exports = router;
