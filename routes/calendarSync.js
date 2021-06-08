@@ -6,8 +6,8 @@ const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
 
 // Get Required Configuration for Google Calendar Integration
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_AUTH_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_AUTH_SECRET;
 const REDIRECT_URL = 'http://localhost:5000/calendarSync/oauthCallback';
 const ISRAEL_TIMEZONE = 'Asia/Jerusalem';
 
@@ -30,7 +30,6 @@ function getAuthUrl(groupID) {
         access_type: 'offline',
         scope: scopes,
         include_granted_scopes: true,
-        // response_type: code,
         redirect_uri: REDIRECT_URL,
         client_id: GOOGLE_CLIENT_ID,
         state: groupID
@@ -52,22 +51,12 @@ function ISODateString(date, time) {
 /// Callback for Google Calendar Integration /////////////////////////////////////////
 router.use("/oauthCallback", function(req, res) {
     const oauth2Client = getOAuthClient();
-    // const session = req.session;
     const groupID = req.query.state;
     const code = req.query.code;
     oauth2Client.getToken(code, async function(err, tokens) {
-        // console.log("tokens : ", tokens);
-        // Now tokens contains an access_token and an optional refresh_token. Save them.
         if (!err) {
             let location;
             oauth2Client.setCredentials(tokens);
-            // session["tokens"] = tokens;
-            // const oauth2 = google.oauth2({
-            //     auth: oauth2Client,
-            //     version: 'v2'
-            // });
-            // let { data } = await oauth2.userinfo.get(); // get user info
-            // let user = await User.findOne({ email: data.email });
             const group = await Group.findById(groupID);
             const calendar = google.calendar({
                 version: 'v3',
