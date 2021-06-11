@@ -1,6 +1,5 @@
 require('dotenv').config()
 const express = require("express");
-const Session = require("express-session");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -58,11 +57,6 @@ app.use("/signOut", signOutRouter);
 app.use("/group", groupRouter);
 app.use("/allGroups", allGroupsRouter);
 app.use("/calendarSync", calendarSyncRouter);
-app.use(Session({
-    secret: 'raysources-secret-19890913007',
-    resave: true,
-    saveUninitialized: true
-}));
 
 app.listen(port, () => {
     console.log(`Study With Me server listening at http://localhost:${port}`);

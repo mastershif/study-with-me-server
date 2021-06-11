@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user").User;
 const Group = require("../models/group").Group;
 const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
@@ -82,7 +81,7 @@ router.use("/oauthCallback", function(req, res) {
                 colorId: 1,
             }
             calendar.events.insert({ calendarId: 'primary', resource: groupEvent }, (err) => {
-                if (err) { return console.log(err) };
+                if (err) { return console.log(err) }
                 return console.log('Calendar Event Created!');
             })
         }
