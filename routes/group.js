@@ -18,13 +18,13 @@ router.get("/:_id", async(request, response) => {
 router.post("/", async(request, response) => {
     let isExists = false;
     const _id = request.body._id;
-    const verifiedAdmin = await User.findOne({email: request.session.verifiedEmail});
+    const verifiedAdmin = await User.findOne({ email: request.session.verifiedEmail });
     if (verifiedAdmin == null) {
         return response.status(401).json({ message: `The user is not authorized to create and edit a group!` });
     }
     try {
         if (_id !== '') {
-            isExists = await Group.exists({_id: mongoose.Types.ObjectId(_id)})
+            isExists = await Group.exists({ _id: mongoose.Types.ObjectId(_id) })
         }
     } catch (error) {
         return response.status(400).json({ message: "An error occurred because of the ObjectId." });
@@ -44,9 +44,9 @@ router.post("/", async(request, response) => {
         endHour: request.body.endHour,
         groupSize: request.body.groupSize,
         meetingType: request.body.meetingType,
-        city: request.body.city,
-        place: request.body.place,
-        link: request.body.link,
+        city: request.body.meetingType === "פרונטלית" ? request.body.city : "",
+        place: request.body.meetingType === "פרונטלית" ? request.body.place : "",
+        link: request.body.meetingType === "וירטואלית" ? request.body.link : "",
         users: isExists ? existedGroup.users : [{
             _id: verifiedAdmin._id,
             name: verifiedAdmin.username,
@@ -60,8 +60,8 @@ router.post("/", async(request, response) => {
     try {
         await groupValidation.validate(group, { abortEarly: false })
         try {
-            const filter = {_id: group._id};
-            const flags = {new: true, upsert: true};
+            const filter = { _id: group._id };
+            const flags = { new: true, upsert: true };
             const savedGroup = await Group.findOneAndUpdate(filter, group, flags);
             if (!isExists) {
                 const userGroups = await User.findById(verifiedAdmin._id).select('groups');
