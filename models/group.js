@@ -15,6 +15,7 @@ const groupSchema = new Schema({
     city: String,
     place: String,
     link: String,
+    communicationChannel: String,
     users: [{
         _id : Schema.Types.ObjectId,
         name : String,
