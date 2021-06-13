@@ -47,6 +47,7 @@ router.post("/", async(request, response) => {
         city: request.body.city,
         place: request.body.place,
         link: request.body.link,
+        communicationChannel: request.body.communicationChannel,
         users: isExists ? existedGroup.users : [{
             _id: verifiedAdmin._id,
             name: verifiedAdmin.username,
