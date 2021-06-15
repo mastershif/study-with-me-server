@@ -6,8 +6,7 @@ const { User } = require("../models/user");
 
 router.put("/", async(request, response) => {
     try {
-        const user = await User.findOne({ email: request.session.verifiedEmail })
-            .select(['groups', 'username', 'userImg', 'email']);
+        const user = await User.findOne({ email: request.session.verifiedEmail });
         if (user === null) {
             return response.status(500).json({ message: `User was not found.` });
         }
