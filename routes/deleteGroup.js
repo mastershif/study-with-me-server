@@ -29,7 +29,7 @@ router.delete("/:groupID", async(request, response) => {
 
         let mailOptions = {
             from: '"Study With Me" <studywithmetau@gmail.com>', // sender address
-            to: groupUsers.map((member) => { if (String(member._id) !== String(group.admin)) { return member.email } }), // list of recievers
+            to: groupUsers.map((member) => { if (String(member._id) !== String(group.admin)) { return member.email } }), // list of receivers
             subject: 'קבוצה שאת/ה חבר/ה בה נמחקה', // subject line
             text: '', // plain text body
             html: message // html body

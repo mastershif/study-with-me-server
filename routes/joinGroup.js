@@ -6,8 +6,7 @@ const { User } = require("../models/user");
 
 router.put("/", async(request, response) => {
     try {
-        const user = await User.findOne({ email: request.session.verifiedEmail })
-            .select(['groups', 'username', 'userImg', 'email']);
+        const user = await User.findOne({ email: request.session.verifiedEmail });
         if (user === null) {
             return response.status(500).json({ message: `User was not found.` });
         }
@@ -18,6 +17,9 @@ router.put("/", async(request, response) => {
         const group = await Group.findById(mongoose.Types.ObjectId(request.body.groupId));
         if (group.users.length >= group.groupSize) {
             return response.status(400).json({ message: "The group is already full." });
+        }
+        if (group.institution !== 'הכל' && group.institution !== user.institute) {
+            return response.status(400).json({ message: "The institutions of the group and user are different." });
         }
         // add the new group to the user's groups.
         await User.findByIdAndUpdate(user._id, { groups: [...userGroups.groups, group._id] }, { strict: false }).exec();

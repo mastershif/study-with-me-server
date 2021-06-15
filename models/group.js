@@ -6,7 +6,7 @@ const groupSchema = new Schema({
     groupTitle: String,
     groupPurpose: String,
     groupDescription: String,
-    institution: Boolean,
+    institution: String,
     date: Date,
     startHour: Date,
     endHour: Date,

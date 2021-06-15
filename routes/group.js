@@ -38,7 +38,7 @@ router.post("/", async(request, response) => {
         groupTitle: request.body.groupTitle,
         groupPurpose: request.body.groupPurpose,
         groupDescription: request.body.groupDescription,
-        institution: request.body.institution || false,
+        institution: request.body.institution ? verifiedAdmin.institute : 'הכל',
         date: request.body.date,
         startHour: request.body.startHour,
         endHour: request.body.endHour,
@@ -77,7 +77,7 @@ router.post("/", async(request, response) => {
                 const groupUsers = await User.find({ _id: { $in: group.users } });
                 const mailOptions = {
                     from: '"Study With Me" <studywithmetau@gmail.com>', // sender address
-                    to: groupUsers.map((member) => { if (String(member._id) !== String(group.admin)) { return member.email } }), // list of recievers
+                    to: groupUsers.map((member) => { if (String(member._id) !== String(group.admin)) { return member.email } }), // list of receivers
                     subject: `עדכון בקבוצה ${group.groupTitle}`, // subject line
                     text: '', // plain text body
                     html: message // html body

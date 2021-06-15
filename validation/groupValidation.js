@@ -7,7 +7,7 @@ const groupValidation = yup.object().shape({
     groupTitle: yup.string().max(40).required(),
     groupDescription: yup.string().max(500),
     groupPurpose: yup.string().required(),
-    institution: yup.boolean(),
+    institution: yup.string(),
     groupSize: yup.number().integer().min(2).max(100).required(),
     date: yup.date().min(todayDate).required(),
     startHour: yup.date().required(),
