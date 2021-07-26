@@ -76,7 +76,7 @@ router.post("/", async(request, response) => {
 
                 const groupUsers = await User.find({ _id: { $in: group.users } });
                 const mailOptions = {
-                    from: '"Study With Me" <studywithmetau@gmail.com>', // sender address
+                    from: '"Study With Me" <studywithmetau@outlook.com>', // sender address
                     to: groupUsers.map((member) => { if (String(member._id) !== String(group.admin)) { return member.email } }), // list of receivers
                     subject: `עדכון בקבוצה ${group.groupTitle}`, // subject line
                     text: '', // plain text body

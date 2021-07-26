@@ -7,7 +7,7 @@ const Group = require("../models/group").Group;
 
 router.delete("/:groupID", async(request, response) => {
     try {
-        const verifiedAdmin = await User.findOne({email: request.session.verifiedEmail});
+        const verifiedAdmin = await User.findOne({ email: request.session.verifiedEmail });
         const groupID = request.params.groupID;
         const group = await Group.findOne({ _id: groupID })
         if (!group.admin.equals(verifiedAdmin._id)) {
@@ -28,7 +28,7 @@ router.delete("/:groupID", async(request, response) => {
         `;
 
         let mailOptions = {
-            from: '"Study With Me" <studywithmetau@gmail.com>', // sender address
+            from: '"Study With Me" <studywithmetau@outlook.com>', // sender address
             to: groupUsers.map((member) => { if (String(member._id) !== String(group.admin)) { return member.email } }), // list of receivers
             subject: 'קבוצה שאת/ה חבר/ה בה נמחקה', // subject line
             text: '', // plain text body
