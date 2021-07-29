@@ -21,7 +21,8 @@ const groupSchema = new Schema({
         name : String,
         imageUrl: String,
     }],
-    admin: Schema.Types.ObjectId
+    admin: Schema.Types.ObjectId,
+    deleted: Boolean
 });
 
 const Group = mongoose.model("Group", groupSchema);

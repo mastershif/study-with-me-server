@@ -17,7 +17,8 @@ router.delete("/:groupID", async(request, response) => {
         for (let i = 0; i < groupUsers.length; i++) {
             await User.updateOne({ _id: groupUsers[i]._id }, { $pull: { 'groups': groupID } });
         }
-        await Group.deleteOne({ _id: groupID })
+        // instead of deleting a group, the group's deleted field will be updated to true:
+        await Group.findByIdAndUpdate({ _id: groupID }, { deleted: true }, { strict: false }).exec();
         response.status(200).json({ message: `Group ${groupID} was deleted successfully` });
 
         /// Send Email to all group members informing them about the deletion of the group by the admin
