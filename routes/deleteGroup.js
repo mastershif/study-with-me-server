@@ -14,10 +14,12 @@ router.delete("/:groupID", async(request, response) => {
             return response.status(401).json({ message: `The user is not authorized to delete the group!` });
         }
         const groupUsers = await User.find({ _id: { $in: group.users } });
-        for (let i = 0; i < groupUsers.length; i++) {
-            await User.updateOne({ _id: groupUsers[i]._id }, { $pull: { 'groups': groupID } });
-        }
-        await Group.deleteOne({ _id: groupID })
+        // when deleting a group, the group is not deleted from the user's groups list
+        // for (let i = 0; i < groupUsers.length; i++) {
+        //     await User.updateOne({ _id: groupUsers[i]._id }, { $pull: { 'groups': groupID } });
+        // }
+        // instead of deleting a group, the group's deleted field will be updated to true:
+        await Group.findByIdAndUpdate({ _id: groupID }, { deleted: true }, { strict: false }).exec();
         response.status(200).json({ message: `Group ${groupID} was deleted successfully` });
 
         /// Send Email to all group members informing them about the deletion of the group by the admin

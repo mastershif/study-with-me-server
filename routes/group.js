@@ -53,7 +53,8 @@ router.post("/", async(request, response) => {
             name: verifiedAdmin.username,
             imageUrl: verifiedAdmin.userImg
         }],
-        admin: isExists ? existedGroup.admin : verifiedAdmin._id
+        admin: isExists ? existedGroup.admin : verifiedAdmin._id,
+        deleted: false
     });
     if (isExists && (verifiedAdmin == null || !existedGroup.admin.equals(verifiedAdmin._id))) {
         return response.status(401).json({ message: `The user is not authorized to edit the group!` });
