@@ -28,7 +28,7 @@ router.put("/", async(request, response) => {
 
         const groupAdmin = await User.findOne({ _id: group.admin });
         const mailOptions = {
-            from: '"Study With Me" <studywithmetau@gmail.com>', // sender address
+            from: '"Study With Me" <studywithmetau@outlook.com>', // sender address
             to: groupAdmin.email, // list of receivers
             subject: `עדכון בקבוצה ${group.groupTitle}`, // subject line
             text: '', // plain text body

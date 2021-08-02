@@ -2,16 +2,10 @@ const nodemailer = require("nodemailer");
 
 const emailNotifier = (mailOptions) => {
     let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        secure: false, // true for 465, false for other ports
-        port: 25,
-        requireTLS: true,
+        service: 'hotmail',
         auth: {
-            user: process.env.SERVER_EMAIL_ADDRESS, // generated ethereal user
-            pass: process.env.SERVER_EMAIL_PASSWORD, // generated ethereal password
-        },
-        tls: {
-            rejectUnauthorized: false
+            user: process.env.SERVER_EMAIL_ADDRESS,
+            pass: process.env.SERVER_EMAIL_PASSWORD,
         }
     });
 
